@@ -1,5 +1,5 @@
 /*
-* Project: Bootstrap Notify = v3.1.5
+* Project: Bootstrap Notify = v5.0.0-alpha
 * Description: Turns standard Bootstrap alerts into "Growl-like" notifications.
 * Author: Mouse0270 aka Robert McIntosh
 * License: MIT License
@@ -48,19 +48,29 @@
 		onShown: null,
 		onClose: null,
 		onClosed: null,
-        onClick: null,
+		onClick: null,
 		icon_type: 'class',
-		template: '<div data-notify="container" class="col-xs-11 col-sm-4 alert alert-{0}" role="alert"><button type="button" aria-hidden="true" class="close" data-notify="dismiss">&times;</button><span data-notify="icon"></span> <span data-notify="title">{1}</span> <span data-notify="message">{2}</span><div class="progress" data-notify="progressbar"><div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div></div><a href="{3}" target="{4}" data-notify="url"></a></div>'
+		template: [
+			'<div data-notify="container" class="col-11 col-sm-9 col-md-7 col-lg-6 col-xl-5 col-xxl-4 alert alert-{0} alert-dismissible" role="alert">',
+				'<span data-notify="icon" class="me-2" role="img"></span>',
+				'<span data-notify="title" class="me-1 fw-bold">{1}</span>',
+				'<span data-notify="message">{2}</span>',
+				'<div class="progress mt-2" data-notify="progressbar" role="progressbar">',
+					'<div class="progress-bar bg-{0}" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>',
+				'</div>',
+				'<a href="{3}" target="{4}" data-notify="url"></a>',
+				'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true" aria-label="Close"></button>',
+			'</div>'].join('')
 	};
 
 	String.format = function () {
 		var args = arguments;
-        var str = arguments[0];
-        return str.replace(/(\{\{\d\}\}|\{\d\})/g, function (str) {
-            if (str.substring(0, 2) === "{{") return str;
-            var num = parseInt(str.match(/\d/)[0]);
-            return args[num + 1];
-        });
+		var str = arguments[0];
+		return str.replace(/(\{\{\d\}\}|\{\d\})/g, function (str) {
+			if (str.substring(0, 2) === "{{") return str;
+			var num = parseInt(str.match(/\d/)[0]);
+			return args[num + 1];
+		});
 	};
 
 	function isDuplicateNotification(notification) {
@@ -305,11 +315,11 @@
 			});
 
 			if ($.isFunction(self.settings.onClick)) {
-			    this.$ele.on('click', function (event) {
-			        if (event.target != self.$ele.find('[data-notify="dismiss"]')[0]) {
-			            self.settings.onClick.call(this, event);
-			        }
-			    });
+				this.$ele.on('click', function (event) {
+					if (event.target != self.$ele.find('[data-notify="dismiss"]')[0]) {
+						self.settings.onClick.call(this, event);
+					}
+				});
 			}
 
 			this.$ele.mouseover(function () {
@@ -392,9 +402,9 @@
 
 		if (typeof selector === "undefined" || selector === "all") {
 			$('[data-notify]').find('[data-notify="dismiss"]').trigger('click');
-		}else if(selector === 'success' || selector === 'info' || selector === 'warning' || selector === 'danger'){
+		} else if (selector === 'success' || selector === 'info' || selector === 'warning' || selector === 'danger') {
 			$('.alert-' + selector + '[data-notify]').find('[data-notify="dismiss"]').trigger('click');
-		} else if(selector){
+		} else if (selector) {
 			$(selector + '[data-notify]').find('[data-notify="dismiss"]').trigger('click');
 		}
 		else {
@@ -404,14 +414,12 @@
 
 	$.notifyCloseExcept = function (selector) {
 
-		if(selector === 'success' || selector === 'info' || selector === 'warning' || selector === 'danger'){
+		if (selector === 'success' || selector === 'info' || selector === 'warning' || selector === 'danger') {
 			$('[data-notify]').not('.alert-' + selector).find('[data-notify="dismiss"]').trigger('click');
-		} else{
+		} else {
 			$('[data-notify]').not(selector).find('[data-notify="dismiss"]').trigger('click');
 		}
 	};
 
 
 }));
-
-
